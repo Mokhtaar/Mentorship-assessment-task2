@@ -71,27 +71,23 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    console.log(addedForms);
-  }, [addedForms]);
-
   const addForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const answers =
       formType === "checkbox" ? correctAnswerIndices : radioCorrectAnswerIndex;
-
     const newForm: Form = {
       title: titleInputValue,
       options,
       indices: answers,
     };
-
     setAddedForms((prevAddedForms) => [...prevAddedForms, newForm]);
-
     setTitleInputValue("");
     setOptions([]);
   };
+
+  useEffect(() => {
+    console.log(addedForms);
+  }, [addedForms]);
 
   return (
     <div className="pt-28 flex flex-col justify-center items-center">
@@ -116,16 +112,16 @@ export default function Home() {
           onSubmit={addForm}
           className="flex flex-col space-y-8 border w-96 "
         >
-          <input
-            className="border p-2 text-center"
-            type="text"
-            value={titleInputValue}
-            onChange={(e) => setTitleInputValue(e.target.value)}
-            placeholder="Input field for question title"
-          />
-          <div>
+          <div className="space-y-6">
             <input
-              className="border p-2 w-full text-center"
+              className="border w-full p-2 text-center placeholder:text-black bg-blue-300"
+              type="text"
+              value={titleInputValue}
+              onChange={(e) => setTitleInputValue(e.target.value)}
+              placeholder="Input field for question title"
+            />
+            <input
+              className="border placeholder:text-black bg-blue-300 text-center p-2 w-full"
               type="text"
               value={inputValue}
               onChange={handleInputChange}
@@ -137,15 +133,15 @@ export default function Home() {
             >
               Add option
             </button>
+            <Options
+              options={options}
+              handleCheck={handleCheck}
+              handleRadio={handleRadio}
+              formType={formType}
+            />
           </div>
-          <Options
-            options={options}
-            handleCheck={handleCheck}
-            handleRadio={handleRadio}
-            formType={formType}
-          />
-          <button type="submit" className="bg-green-500 p-2">
-            sumbit
+          <button type="submit" className="bg-green-500 w-[35%] mx-auto p-2">
+            Sumbit button
           </button>
         </form>
       )}
