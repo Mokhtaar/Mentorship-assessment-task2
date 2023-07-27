@@ -5,7 +5,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 interface Form {
   title: string;
   options: string[];
-  indices: number[] | number;
+  indices: number[];
 }
 
 export default function Home() {
@@ -145,16 +145,29 @@ export default function Home() {
           </button>
         </form>
       )}
-      {/* <div>
-        {addedForms.map((form) => (
-          <div key={form.title}>
-            <h1>{form.title}</h1>
-            {form.options.map((option) => (
-              <p key={option}>{option}</p>
-            ))}
+      <div className="absolute right-10">
+        {addedForms.map((form, index) => (
+          <div className="space-y-4 mt-8" key={form.title}>
+            <h1>Title: {form.title}</h1>
+            <div>
+              {form.options.map((option, index) => (
+                <p key={option}>
+                  Answer {index}: {option}
+                </p>
+              ))}
+            </div>
+            {formType === "checkedbox" ? (
+              <div>
+                {form.indices.map((index) => (
+                  <p key={index}>Index number: {index}</p>
+                ))}
+              </div>
+            ) : (
+              <p>Index number: {index} </p>
+            )}
           </div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }
