@@ -6,6 +6,7 @@ interface Form {
   title: string;
   options: string[];
   indices: number[];
+  index: number | null;
 }
 
 export default function Home() {
@@ -44,10 +45,7 @@ export default function Home() {
     }
   };
 
-  const getCorrectAnswerIndices = (
-    options: string[],
-    correctAnswers: string[]
-  ): number[] => {
+  const getCorrectAnswerIndices = (): number[] => {
     const uniqueIndices = new Set<number>();
     correctAnswers.forEach((correctAnswer) => {
       const index = options.indexOf(correctAnswer);
@@ -56,11 +54,12 @@ export default function Home() {
       }
     });
     const uniqueIndicesArray = Array.from(uniqueIndices);
+
     return uniqueIndicesArray;
   };
 
   useEffect(() => {
-    const indices = getCorrectAnswerIndices(options, correctAnswers);
+    const indices = getCorrectAnswerIndices();
     setCorrectAnswerIndices(indices);
   }, [correctAnswers]);
 
@@ -73,13 +72,16 @@ export default function Home() {
 
   const addForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const answers =
-      formType === "checkbox" ? correctAnswerIndices : radioCorrectAnswerIndex;
+    const answers = formType === "checkbox" ? correctAnswerIndices : [];
+    const answer = formType === "radio" ? radioCorrectAnswerIndex : null;
+
     const newForm: Form = {
       title: titleInputValue,
       options,
       indices: answers,
+      index: answer,
     };
+
     setAddedForms((prevAddedForms) => [...prevAddedForms, newForm]);
     setTitleInputValue("");
     setOptions([]);
@@ -140,31 +142,29 @@ export default function Home() {
               formType={formType}
             />
           </div>
-          <button type="submit" className="bg-green-500 w-[35%] mx-auto p-2">
+          <button type="submit" className="bg-green-500 w-[%] mx-auto p-2">
             Sumbit button
           </button>
         </form>
       )}
-      <div className="absolute right-10">
-        {addedForms.map((form, index) => (
-          <div className="space-y-4 mt-8" key={form.title}>
-            <h1>Title: {form.title}</h1>
+      <div className="absolute right-[20%]">
+        {addedForms.map((form) => (
+          <div className="space-y-10" key={form.title}>
+            <h1>{form.title}</h1>
             <div>
-              {form.options.map((option, index) => (
-                <p key={option}>
-                  Answer {index}: {option}
-                </p>
+              {form.options.map((option) => (
+                <p key={option}>{option}</p>
               ))}
             </div>
-            {formType === "checkedbox" ? (
-              <div>
-                {form.indices.map((index) => (
-                  <p key={index}>Index number: {index}</p>
+            <div>
+              <p className={`${form.indices?.length === 0 ? "hidden" : "block"}`}>
+                Correct answer indices:
+                {form.indices!.map((index) => (
+                  <p key={index}>{index}</p>
                 ))}
-              </div>
-            ) : (
-              <p>Index number: {index} </p>
-            )}
+              </p>
+              <p className={`${form.index === null ? "hidden" : "block"}`}>Correct answer index: {form.index}</p>
+            </div>
           </div>
         ))}
       </div>
